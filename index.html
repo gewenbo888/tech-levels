@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Technology Levels L1–L5 — 技术等级</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<script defer src="https://analytics-dashboard-two-blue.vercel.app/tracker.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@200;300;400;500;600;700&family=Noto+Sans+SC:wght@200;300;400;500;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0f0f18;--bg2:#161624;--bg3:#1e1e30;
+  --text:#d8dce8;--dim:#6068808;--faint:#282840;
+  --l1:#3b82f6;--l2:#6366f1;--l3:#8b5cf6;--l4:#a855f7;--l5:#c084fc;
+  --l1g:linear-gradient(135deg,#3b82f6,#2563eb);
+  --l2g:linear-gradient(135deg,#6366f1,#4f46e5);
+  --l3g:linear-gradient(135deg,#8b5cf6,#7c3aed);
+  --l4g:linear-gradient(135deg,#a855f7,#9333ea);
+  --l5g:linear-gradient(135deg,#c084fc,#a855f7);
+  --rule:rgba(216,220,232,.04);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:'Sora',sans-serif;font-weight:300;line-height:1.75;
+  overflow-x:hidden;-webkit-font-smoothing:antialiased;
+}
+body::after{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.015;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.6' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:256px;
+}
+.cn{font-family:'Noto Sans SC',sans-serif;}
+.mono{font-family:'JetBrains Mono',monospace;}
+h1,h2,h3{font-family:'Sora',sans-serif;}
+
+.rv{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease;}
+.rv.vis{opacity:1;transform:translateY(0);}
+.rv.d1{transition-delay:.08s}.rv.d2{transition-delay:.18s}.rv.d3{transition-delay:.28s}
+
+/* ═══ NAV ═══ */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:500;
+  background:rgba(15,15,24,.9);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--rule);height:52px;
+  display:flex;align-items:center;justify-content:center;gap:4px;padding:0 20px;
+}
+.nav-tab{
+  font-size:.65rem;font-weight:500;letter-spacing:.06em;
+  padding:7px 16px;border-radius:8px;cursor:pointer;
+  transition:all .2s;text-decoration:none;color:#606880;
+  position:relative;
+}
+.nav-tab:hover{color:var(--text);background:rgba(255,255,255,.04);}
+.nav-tab.active{color:#fff;}
+.nav-tab.active::after{
+  content:'';position:absolute;bottom:-1px;left:20%;right:20%;height:2px;
+  border-radius:1px;
+}
+.nav-tab[data-l="1"].active::after{background:var(--l1);}
+.nav-tab[data-l="2"].active::after{background:var(--l2);}
+.nav-tab[data-l="3"].active::after{background:var(--l3);}
+.nav-tab[data-l="4"].active::after{background:var(--l4);}
+.nav-tab[data-l="5"].active::after{background:var(--l5);}
+.nav-tab[data-l="all"].active::after{background:linear-gradient(90deg,var(--l1),var(--l5));}
+
+/* ═══ HERO ═══ */
+#hero{
+  min-height:100vh;display:flex;flex-direction:column;
+  justify-content:center;align-items:center;text-align:center;
+  padding:120px 40px 80px;position:relative;overflow:hidden;
+}
+#heroCanvas{position:absolute;inset:0;width:100%;height:100%;}
+.hero-z{position:relative;z-index:2;}
+
+.level-pills{display:flex;gap:8px;margin-bottom:28px;justify-content:center;}
+.level-pill{
+  width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:.8rem;color:#fff;opacity:.8;
+  transition:transform .3s,opacity .3s;cursor:default;
+}
+.level-pill:hover{transform:scale(1.12);opacity:1;}
+.lp1{background:var(--l1g);}.lp2{background:var(--l2g);}.lp3{background:var(--l3g);}.lp4{background:var(--l4g);}.lp5{background:var(--l5g);}
+
+h1.hero-t{font-size:clamp(2.2rem,5.5vw,4rem);font-weight:200;line-height:1.12;letter-spacing:-.03em;}
+.hero-cn{font-family:'Noto Sans SC',sans-serif;font-weight:200;font-size:clamp(1rem,2vw,1.35rem);color:#606880;margin-top:8px;}
+.hero-desc{max-width:580px;margin-top:24px;font-size:.92rem;color:#606880;}
+
+/* ═══ SECTIONS ═══ */
+section{max-width:1240px;margin:0 auto;padding:80px 40px;}
+@media(max-width:700px){section{padding:50px 16px;}}
+
+/* ═══ LEVEL SECTION ═══ */
+.level-header{
+  display:flex;align-items:center;gap:18px;margin-bottom:40px;
+  padding-bottom:20px;border-bottom:1px solid var(--rule);
+}
+.level-badge{
+  width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:1.2rem;color:#fff;flex-shrink:0;
+}
+.level-header h2{font-size:clamp(1.4rem,2.8vw,2rem);font-weight:300;letter-spacing:-.02em;}
+.level-header .h2cn{font-family:'Noto Sans SC',sans-serif;font-weight:200;font-size:clamp(.82rem,1.4vw,1rem);color:#606880;margin-top:2px;}
+.level-header .era{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;margin-top:4px;}
+
+/* ═══ DOMAIN GRID ═══ */
+.domain-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;
+}
+@media(max-width:500px){.domain-grid{grid-template-columns:1fr;}}
+
+.domain-card{
+  background:var(--bg2);border:1px solid var(--faint);border-radius:14px;
+  padding:22px 20px;position:relative;overflow:hidden;
+  transition:border-color .3s,transform .3s,box-shadow .3s;
+}
+.domain-card:hover{
+  transform:translateY(-2px);
+  box-shadow:0 12px 40px rgba(0,0,0,.3);
+}
+.domain-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:var(--lc);opacity:.4;transition:opacity .3s;
+}
+.domain-card:hover::before{opacity:.8;}
+
+.dc-head{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.dc-icon{font-size:1.2rem;}
+.dc-name{font-weight:600;font-size:.88rem;letter-spacing:-.01em;}
+.dc-name-cn{font-family:'Noto Sans SC',sans-serif;font-weight:300;font-size:.72rem;color:#606880;}
+.dc-body{font-size:.82rem;color:rgba(216,220,232,.7);line-height:1.7;}
+.dc-body-cn{font-family:'Noto Sans SC',sans-serif;font-size:.75rem;color:rgba(216,220,232,.35);margin-top:6px;line-height:1.8;}
+
+/* ═══ COMPARISON TABLE ═══ */
+.comp-wrap{
+  overflow-x:auto;border:1px solid var(--faint);border-radius:16px;
+  background:var(--bg2);margin-top:32px;
+}
+.comp-table{width:100%;border-collapse:collapse;min-width:900px;font-size:.78rem;}
+.comp-table th{
+  font-family:'JetBrains Mono',monospace;font-size:.55rem;letter-spacing:.1em;
+  text-transform:uppercase;padding:12px 14px;text-align:left;
+  border-bottom:2px solid var(--faint);color:#606880;
+  position:sticky;top:0;background:var(--bg3);z-index:5;
+}
+.comp-table td{padding:11px 14px;border-bottom:1px solid var(--rule);vertical-align:top;line-height:1.6;}
+.comp-table tr:hover td{background:rgba(139,92,246,.02);}
+.comp-table .domain-col{font-weight:500;white-space:nowrap;}
+.comp-table .cn-sub{font-family:'Noto Sans SC',sans-serif;font-weight:200;font-size:.65rem;color:#606880;display:block;}
+.comp-table .lvl-cell{font-size:.72rem;color:rgba(216,220,232,.65);}
+
+.lvl-hdr{text-align:center !important;}
+.l1-col{color:var(--l1);}.l2-col{color:var(--l2);}.l3-col{color:var(--l3);}.l4-col{color:var(--l4);}.l5-col{color:var(--l5);}
+
+/* ═══ FOOTER ═══ */
+footer{text-align:center;padding:50px 40px;border-top:1px solid var(--rule);max-width:1240px;margin:0 auto;}
+footer p{font-size:.72rem;color:#606880;}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-tab active" data-l="all" href="#hero">Overview</a>
+  <a class="nav-tab" data-l="1" href="#l1">L1</a>
+  <a class="nav-tab" data-l="2" href="#l2">L2</a>
+  <a class="nav-tab" data-l="3" href="#l3">L3</a>
+  <a class="nav-tab" data-l="4" href="#l4">L4</a>
+  <a class="nav-tab" data-l="5" href="#l5">L5</a>
+  <a class="nav-tab" data-l="all" href="#table">Table</a>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section id="hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="hero-z">
+    <div class="level-pills rv">
+      <div class="level-pill lp1">L1</div>
+      <div class="level-pill lp2">L2</div>
+      <div class="level-pill lp3">L3</div>
+      <div class="level-pill lp4">L4</div>
+      <div class="level-pill lp5">L5</div>
+    </div>
+    <h1 class="hero-t rv d1">Technology Levels</h1>
+    <div class="hero-cn rv d2">技术等级 L1–L5 — 从基础到文明飞跃</div>
+    <p class="hero-desc rv d3">
+      A unified maturity framework mapping 11 technological domains from foundational capability (L1)
+      to civilizational transcendence (L5). Each level represents an order-of-magnitude leap.
+    </p>
+    <p class="hero-desc rv d3 cn" style="font-size:.82rem;opacity:.5;margin-top:.6rem;">
+      一个统一的成熟度框架，将11个技术领域从基础能力（L1）映射到文明跨越（L5）。每个等级代表一个数量级的飞跃。
+    </p>
+  </div>
+</section>
+
+<!-- ═══ L1 ═══ -->
+<section id="l1" style="--lc:var(--l1);">
+  <div class="level-header rv">
+    <div class="level-badge" style="background:var(--l1g);">L1</div>
+    <div>
+      <h2>Foundation</h2>
+      <div class="h2cn">基础层 — 核心能力建立</div>
+      <div class="era" style="color:var(--l1);">Present-day baseline 当前基线</div>
+    </div>
+  </div>
+  <div class="domain-grid">
+    <div class="domain-card rv"><div class="dc-head"><span class="dc-icon">&#129302;</span><div><div class="dc-name">Foundation Models</div><div class="dc-name-cn">基础模型</div></div></div><div class="dc-body">Chat — conversational AI capable of general question-answering and text generation.</div><div class="dc-body-cn">聊天——能进行通用问答和文本生成的对话式AI。</div></div>
+    <div class="domain-card rv d1"><div class="dc-head"><span class="dc-icon">&#129516;</span><div><div class="dc-name">Humanoid Robots</div><div class="dc-name-cn">人形机器人</div></div></div><div class="dc-body">Basic operational assistance — simple repetitive tasks in controlled environments.</div><div class="dc-body-cn">基础操作辅助——在受控环境中执行简单重复任务。</div></div>
+    <div class="domain-card rv d2"><div class="dc-head"><span class="dc-icon">&#128663;</span><div><div class="dc-name">Autonomous Driving</div><div class="dc-name-cn">自动驾驶</div></div></div><div class="dc-body">Driver assistance — lane keeping, adaptive cruise control, emergency braking (ADAS).</div><div class="dc-body-cn">驾驶辅助——车道保持、自适应巡航、紧急制动（ADAS）。</div></div>
+    <div class="domain-card rv"><div class="dc-head"><span class="dc-icon">&#129504;</span><div><div class="dc-name">Brain–Computer Interface</div><div class="dc-name-cn">脑机接口</div></div></div><div class="dc-body">Basic signal acquisition and decoding at the research stage.</div><div class="dc-body-cn">研究阶段的基础信号采集和解码。</div></div>
+    <div class="domain-card rv d1"><div class="dc-head"><span class="dc-icon">&#128279;</span><div><div class="dc-name">Web3</div><div class="dc-name-cn">Web3</div></div></div><div class="dc-body">Decentralized ledger — blockchain as an immutable, distributed record system.</div><div class="dc-body-cn">去中心化账本——区块链作为不可篡改的分布式记录系统。</div></div>
+    <div class="domain-card rv d2"><div class="dc-head"><span class="dc-icon">&#9883;</span><div><div class="dc-name">Longevity</div><div class="dc-name-cn">长寿</div></div></div><div class="dc-body">Health optimization and reversible interventions — lifestyle-based aging delay.</div><div class="dc-body-cn">健康优化与可逆干预——基于生活方式的衰老延缓。</div></div>
+    <div class="domain-card rv"><div class="dc-head"><span class="dc-icon">&#9889;</span><div><div class="dc-name">Energy</div><div class="dc-name-cn">能源</div></div></div><div class="dc-body">Fossil fuels — coal, oil, and natural gas as primary energy sources.</div><div class="dc-body-cn">化石燃料——煤炭、石油和天然气作为主要能源。</div></div>
+    <div class="domain-card rv d1"><div class="dc-head"><span class="dc-icon">&#128296;</span><div><div class="dc-name">Materials</div><div class="dc-name-cn">材料</div></div></div><div class="dc-body">Metallurgy — traditional metal alloys and manufacturing processes.</div><div class="dc-body-cn">冶金——传统金属合金与制造工艺。</div></div>
+    <div class="domain-card rv d2"><div class="dc-head"><span class="dc-icon">&#127918;</span><div><div class="dc-name">Virtual Reality</div><div class="dc-name-cn">虚拟现实</div></div></div><div class="dc-body">Video games — interactive digital entertainment as the primary virtual experience.</div><div class="dc-body-cn">电子游戏——交互式数字娱乐作为主要虚拟体验。</div></div>
+    <div class="domain-card rv"><div class="dc-head"><span class="dc-icon">&#128640;</span><div><div class="dc-name">Spatial Mobility</div><div class="dc-name-cn">空间移动</div></div></div><div class="dc-body">Automobile-level — ground transportation as the standard mobility paradigm.</div><div class="dc-body-cn">汽车级——地面交通作为标准移动范式。</div></div>
+  </div>
+</section>
+
+<!-- ═══ L2 ═══ -->
+<section id="l2" style="--lc:var(--l2);">
+  <div class="level-header rv">
+    <div class="level-badge" style="background:var(--l2g);">L2</div>
+    <div>
+      <h2>Augmentation</h2>
+      <div class="h2cn">增强层 — 能力显著提升</div>
+      <div class="era" style="color:var(--l2);">Near-future 近未来</div>
+    </div>
+  </div>
+  <div class="domain-grid">
+    <div class="domain-card rv"><div class="dc-head"><span class="dc-icon">&#129302;</span><div><div class="dc-name">Foundation Models</div><div class="dc-name-cn">基础模型</div></div></div><div class="dc-body">Reasoning — models that think step-by-step, verify their logic, and solve complex multi-step problems.</div><div class="dc-body-cn">推理——逐步思考、验证逻辑、解决复杂多步骤问题的模型。</div></div>
+    <div class="domain-card rv d1"><div class="dc-head"><span class="dc-icon">&#129516;</span><div><div class="dc-name">Humanoid Robots</div><div class="dc-name-cn">人形机器人</div></div></div><div class="dc-body">Environmental perception and simple interaction — robots that see, navigate, and handle objects.</div><div class="dc-body-cn">环境感知与简单交互——能看、能导航、能操作物体的机器人。</div></div>
+    <div class="domain-card rv d2"><div class="dc-head"><span class="dc-icon">&#128663;</span><div><div class="dc-name">Autonomous Driving</div><div class="dc-name-cn">自动驾驶</div></div></div><div class="dc-body">Partial autonomous driving — highway autopilot, automated parking, driver monitoring required.</div><div class="dc-body-cn">部分自动驾驶——高速公路自动驾驶、自动泊车，需驾驶员监控。</div></div>
+    <div class="domain-card rv"><div class="dc-head"><span class="dc-icon">&#129504;</span><div><div class="dc-name">Brain–Computer Interface</div><div class="dc-name-cn">脑机接口</div></div></div><div class="dc-body">Simple one-way control — moving a cursor or robotic arm through neural signals.</div><div class="dc-body-cn">简单单向控制——通过神经信号移动光标或机械臂。</div></div>
+    <div class="domain-card rv d1"><div class="dc-head"><span class="dc-icon">&#128279;</span><div><div class="dc-name">Web3</div><div class="dc-name-cn">Web3</div></div></div><div class="dc-body">Smart contracts — self-executing agreements that automate trust and transactions.</div><div class="dc-body-cn">智能合约——自动执行的协议，自动化信任与交易。</div></div>
+    <div class="domain-card rv d2"><div class="dc-head"><span class="dc-icon">&#9883;</span><div><div class="dc-name">Longevity</div><div class="dc-name-cn">长寿</div></div></div><div class="dc-body">Organ- and system-level repair and maintenance — engineered lifespan extension.</div><div class="dc-body-cn">器官和系统级修复与维护——工程化寿命延长。</div></div>
+    <div class="domain-card rv"><div class="dc-head"><span class="dc-icon">&#9889;</span><div><div class="dc-name">Energy</div><div class="dc-name-cn">能源</div></div></div><div class="dc-body">Solar energy — photovoltaic and thermal solar as scalable clean power.</div><div class="dc-body-cn">太阳能——光伏和热太阳能作为可扩展的清洁能源。</div></div>
+    <div class="domain-card rv d1"><div class="dc-head"><span class="dc-icon">&#128296;</span><div><div class="dc-name">Materials</div><div class="dc-name-cn">材料</div></div></div><div class="dc-body">Precision manufacturing — advanced composites, semiconductors, and engineered materials.</div><div class="dc-body-cn">精密制造——先进复合材料、半导体与工程材料。</div></div>
+    <div class="domain-card rv d2"><div class="dc-head"><span class="dc-icon">&#127918;</span><div><div class="dc-name">Virtual Reality</div><div class="dc-name-cn">虚拟现实</div></div></div><div class="dc-body">Economically integrated video games — virtual economies with real-world value exchange.</div><div class="dc-body-cn">经济整合的电子游戏——与现实世界进行价值交换的虚拟经济。</div></div>
+    <div class="domain-card rv"><div class="dc-head"><span class="dc-icon">&#128640;</span><div><div class="dc-name">Spatial Mobility</div><div class="dc-name-cn">空间移动</div></div></div><div class="dc-body">Aircraft-level — routine aerial transportation expands the mobility envelope.</div><div class="dc-body-cn">飞机级——常规航空运输扩展了移动范围。</div></div>
+  </div>
+</section>
+
+<!-- ═══ L3 ═══ -->
+<section id="l3" style="--lc:var(--l3);">
+  <div class="level-header rv">
+    <div class="level-badge" style="background:var(--l3g);">L3</div>
+    <div>
+      <h2>Autonomy</h2>
+      <div class="h2cn">自主层 — 条件性自主运行</div>
+      <div class="era" style="color:var(--l3);">Mid-future 中期未来</div>
+    </div>
+  </div>
+  <div class="domain-grid">
+    <div class="domain-card rv"><div class="dc-head"><span class="dc-icon">&#129302;</span><div><div class="dc-name">Foundation Models</div><div class="dc-name-cn">基础模型</div></div></div><div class="dc-body">Intelligent agents — autonomous systems that plan, use tools, and execute multi-step workflows.</div><div class="dc-body-cn">智能代理——能规划、使用工具并执行多步骤工作流的自主系统。</div></div>
+    <div class="domain-card rv d1"><div class="dc-head"><span class="dc-icon">&#129516;</span><div><div class="dc-name">Humanoid Robots</div><div class="dc-name-cn">人形机器人</div></div></div><div class="dc-body">Conditional autonomy and contextual understanding — robots that adapt to unstructured environments.</div><div class="dc-body-cn">条件性自主与上下文理解——能适应非结构化环境的机器人。</div></div>
+    <div class="domain-card rv d2"><div class="dc-head"><span class="dc-icon">&#128663;</span><div><div class="dc-name">Autonomous Driving</div><div class="dc-name-cn">自动驾驶</div></div></div><div class="dc-body">Conditional autonomous driving — full self-driving within defined operational domains.</div><div class="dc-body-cn">有条件自动驾驶——在限定运行域内完全自主驾驶。</div></div>
+    <div class="domain-card rv"><div class="dc-head"><span class="dc-icon">&#129504;</span><div><div class="dc-name">Brain–Computer Interface</div><div class="dc-name-cn">脑机接口</div></div></div><div class="dc-body">Bidirectional interaction — reading brain signals and providing stimulation feedback.</div><div class="dc-body-cn">双向交互——读取大脑信号并提供刺激反馈。</div></div>
+    <div class="domain-card rv d1"><div class="dc-head"><span class="dc-icon">&#128279;</span><div><div class="dc-name">Web3</div><div class="dc-name-cn">Web3</div></div></div><div class="dc-body">DAO — Decentralized Autonomous Organizations governing resources and decisions collectively.</div><div class="dc-body-cn">DAO——去中心化自治组织，集体治理资源与决策。</div></div>
+    <div class="domain-card rv d2"><div class="dc-head"><span class="dc-icon">&#9883;</span><div><div class="dc-name">Longevity</div><div class="dc-name-cn">长寿</div></div></div><div class="dc-body">Periodic cellular and molecular resetting — partially reversible aging.</div><div class="dc-body-cn">周期性细胞和分子重置——部分可逆衰老。</div></div>
+    <div class="domain-card rv"><div class="dc-head"><span class="dc-icon">&#9889;</span><div><div class="dc-name">Energy</div><div class="dc-name-cn">能源</div></div></div><div class="dc-body">Nuclear fission — safe, scalable fission reactors as baseload energy.</div><div class="dc-body-cn">核裂变——安全、可扩展的裂变反应堆作为基荷能源。</div></div>
+    <div class="domain-card rv d1"><div class="dc-head"><span class="dc-icon">&#128296;</span><div><div class="dc-name">Materials</div><div class="dc-name-cn">材料</div></div></div><div class="dc-body">3D printing — additive manufacturing enabling on-demand complex structures.</div><div class="dc-body-cn">3D打印——按需生产复杂结构的增材制造。</div></div>
+    <div class="domain-card rv d2"><div class="dc-head"><span class="dc-icon">&#127918;</span><div><div class="dc-name">Virtual Reality</div><div class="dc-name-cn">虚拟现实</div></div></div><div class="dc-body">Open-world games — persistent, emergent virtual worlds with deep player agency.</div><div class="dc-body-cn">开放世界游戏——持久、涌现的虚拟世界，玩家拥有深度自主权。</div></div>
+    <div class="domain-card rv"><div class="dc-head"><span class="dc-icon">&#128640;</span><div><div class="dc-name">Spatial Mobility</div><div class="dc-name-cn">空间移动</div></div></div><div class="dc-body">Rocket-level — orbital access and interplanetary transit become viable.</div><div class="dc-body-cn">火箭级——轨道进入和行星际运输变得可行。</div></div>
+  </div>
+</section>
+
+<!-- ═══ L4 ═══ -->
+<section id="l4" style="--lc:var(--l4);">
+  <div class="level-header rv">
+    <div class="level-badge" style="background:var(--l4g);">L4</div>
+    <div>
+      <h2>Mastery</h2>
+      <div class="h2cn">精通层 — 高度自主与创新</div>
+      <div class="era" style="color:var(--l4);">Far-future 远期未来</div>
+    </div>
+  </div>
+  <div class="domain-grid">
+    <div class="domain-card rv"><div class="dc-head"><span class="dc-icon">&#129302;</span><div><div class="dc-name">Foundation Models</div><div class="dc-name-cn">基础模型</div></div></div><div class="dc-body">Innovation — AI that generates novel scientific hypotheses, inventions, and creative works beyond human conception.</div><div class="dc-body-cn">创新——AI生成超越人类构想的新颖科学假设、发明和创作。</div></div>
+    <div class="domain-card rv d1"><div class="dc-head"><span class="dc-icon">&#129516;</span><div><div class="dc-name">Humanoid Robots</div><div class="dc-name-cn">人形机器人</div></div></div><div class="dc-body">High autonomy and complex task execution — robots handling surgery, construction, and creative work.</div><div class="dc-body-cn">高度自主与复杂任务执行——处理手术、建造和创造性工作的机器人。</div></div>
+    <div class="domain-card rv d2"><div class="dc-head"><span class="dc-icon">&#128663;</span><div><div class="dc-name">Autonomous Driving</div><div class="dc-name-cn">自动驾驶</div></div></div><div class="dc-body">High-level autonomous driving — any road, any weather, any scenario without human backup.</div><div class="dc-body-cn">高级自动驾驶——任何道路、任何天气、任何场景，无需人类备份。</div></div>
+    <div class="domain-card rv"><div class="dc-head"><span class="dc-icon">&#129504;</span><div><div class="dc-name">Brain–Computer Interface</div><div class="dc-name-cn">脑机接口</div></div></div><div class="dc-body">Partial clinical applications — assistance for paralysis and ALS patients; restored communication and mobility.</div><div class="dc-body-cn">部分临床应用——辅助瘫痪和渐冻症患者，恢复沟通和行动能力。</div></div>
+    <div class="domain-card rv d1"><div class="dc-head"><span class="dc-icon">&#128279;</span><div><div class="dc-name">Web3</div><div class="dc-name-cn">Web3</div></div></div><div class="dc-body">Metaverse — fully immersive digital worlds with persistent identity, economy, and governance.</div><div class="dc-body-cn">元宇宙——具有持久身份、经济和治理的完全沉浸式数字世界。</div></div>
+    <div class="domain-card rv d2"><div class="dc-head"><span class="dc-icon">&#9883;</span><div><div class="dc-name">Longevity</div><div class="dc-name-cn">长寿</div></div></div><div class="dc-body">Continuous damage removal and modular replacement — practical radical life extension.</div><div class="dc-body-cn">持续损伤清除与模块化替换——实用的极端寿命延长。</div></div>
+    <div class="domain-card rv"><div class="dc-head"><span class="dc-icon">&#9889;</span><div><div class="dc-name">Energy</div><div class="dc-name-cn">能源</div></div></div><div class="dc-body">Controlled nuclear fusion — virtually limitless clean energy from hydrogen fusion.</div><div class="dc-body-cn">可控核聚变——氢聚变提供几乎无限的清洁能源。</div></div>
+    <div class="domain-card rv d1"><div class="dc-head"><span class="dc-icon">&#128296;</span><div><div class="dc-name">Materials</div><div class="dc-name-cn">材料</div></div></div><div class="dc-body">Nanotechnology — engineering matter at the atomic scale; programmable materials.</div><div class="dc-body-cn">纳米技术——在原子尺度上工程化物质；可编程材料。</div></div>
+    <div class="domain-card rv d2"><div class="dc-head"><span class="dc-icon">&#127918;</span><div><div class="dc-name">Virtual Reality</div><div class="dc-name-cn">虚拟现实</div></div></div><div class="dc-body">Self-operating open-world environments — AI-generated worlds that evolve autonomously.</div><div class="dc-body-cn">自运行开放世界环境——自主演化的AI生成世界。</div></div>
+    <div class="domain-card rv"><div class="dc-head"><span class="dc-icon">&#128640;</span><div><div class="dc-name">Spatial Mobility</div><div class="dc-name-cn">空间移动</div></div></div><div class="dc-body">Spaceship-level — sustained interplanetary and early interstellar capability.</div><div class="dc-body-cn">飞船级——持续的行星际和早期星际能力。</div></div>
+  </div>
+</section>
+
+<!-- ═══ L5 ═══ -->
+<section id="l5" style="--lc:var(--l5);">
+  <div class="level-header rv">
+    <div class="level-badge" style="background:var(--l5g);">L5</div>
+    <div>
+      <h2>Transcendence</h2>
+      <div class="h2cn">超越层 — 文明形态跃迁</div>
+      <div class="era" style="color:var(--l5);">Civilizational horizon 文明地平线</div>
+    </div>
+  </div>
+  <div class="domain-grid">
+    <div class="domain-card rv"><div class="dc-head"><span class="dc-icon">&#129302;</span><div><div class="dc-name">Foundation Models</div><div class="dc-name-cn">基础模型</div></div></div><div class="dc-body">Organizer — AI that coordinates civilization-scale systems, resource allocation, and multi-agent ecosystems.</div><div class="dc-body-cn">组织者——协调文明级系统、资源配置和多代理生态的AI。</div></div>
+    <div class="domain-card rv d1"><div class="dc-head"><span class="dc-icon">&#129516;</span><div><div class="dc-name">Humanoid Robots</div><div class="dc-name-cn">人形机器人</div></div></div><div class="dc-body">Fully autonomous with human-level intelligence — indistinguishable from humans in capability and adaptability.</div><div class="dc-body-cn">具有人类级智能的完全自主体——在能力和适应性上与人类无异。</div></div>
+    <div class="domain-card rv d2"><div class="dc-head"><span class="dc-icon">&#128663;</span><div><div class="dc-name">Autonomous Driving</div><div class="dc-name-cn">自动驾驶</div></div></div><div class="dc-body">Fully autonomous driving — all vehicles, all environments, zero human involvement globally.</div><div class="dc-body-cn">完全自动驾驶——所有车辆、所有环境、全球零人类参与。</div></div>
+    <div class="domain-card rv"><div class="dc-head"><span class="dc-icon">&#129504;</span><div><div class="dc-name">Brain–Computer Interface</div><div class="dc-name-cn">脑机接口</div></div></div><div class="dc-body">High-bandwidth, natural human–machine symbiosis — seamless merging of biological and digital cognition.</div><div class="dc-body-cn">高带宽、自然的人机共生——生物与数字认知的无缝融合。</div></div>
+    <div class="domain-card rv d1"><div class="dc-head"><span class="dc-icon">&#128279;</span><div><div class="dc-name">Web3</div><div class="dc-name-cn">Web3</div></div></div><div class="dc-body">Automated state — algorithmic governance replacing traditional institutions entirely.</div><div class="dc-body-cn">自动化国家——算法治理完全取代传统机构。</div></div>
+    <div class="domain-card rv d2"><div class="dc-head"><span class="dc-icon">&#9883;</span><div><div class="dc-name">Longevity</div><div class="dc-name-cn">长寿</div></div></div><div class="dc-body">Self-maintaining and transferable individual continuity — technological non-aging.</div><div class="dc-body-cn">自维护和可转移的个体连续性——技术性不衰老。</div></div>
+    <div class="domain-card rv"><div class="dc-head"><span class="dc-icon">&#9889;</span><div><div class="dc-name">Energy</div><div class="dc-name-cn">能源</div></div></div><div class="dc-body">Dyson sphere — harvesting the total energy output of a star.</div><div class="dc-body-cn">戴森球——收集一颗恒星的全部能量输出。</div></div>
+    <div class="domain-card rv d1"><div class="dc-head"><span class="dc-icon">&#128296;</span><div><div class="dc-name">Materials</div><div class="dc-name-cn">材料</div></div></div><div class="dc-body">Nano-scale 3D synthesis — assembling any structure atom by atom on demand.</div><div class="dc-body-cn">纳米级3D合成——按需逐原子组装任何结构。</div></div>
+    <div class="domain-card rv d2"><div class="dc-head"><span class="dc-icon">&#127918;</span><div><div class="dc-name">Virtual Reality</div><div class="dc-name-cn">虚拟现实</div></div></div><div class="dc-body">Metaverse — a fully realized parallel reality indistinguishable from physical existence.</div><div class="dc-body-cn">元宇宙——与物理存在无法区分的完全实现的平行现实。</div></div>
+    <div class="domain-card rv"><div class="dc-head"><span class="dc-icon">&#128640;</span><div><div class="dc-name">Spatial Mobility</div><div class="dc-name-cn">空间移动</div></div></div><div class="dc-body">Warp drive — bending spacetime itself for faster-than-light interstellar travel.</div><div class="dc-body-cn">曲速引擎——弯曲时空本身实现超光速星际旅行。</div></div>
+  </div>
+</section>
+
+<!-- ═══ COMPARISON TABLE ═══ -->
+<section id="table">
+  <div class="level-header rv">
+    <div><h2>Complete Matrix</h2><div class="h2cn">完整对照矩阵 — 11个领域 × 5个等级</div></div>
+  </div>
+  <div class="comp-wrap rv d1">
+    <table class="comp-table">
+      <thead><tr>
+        <th>Domain 领域</th>
+        <th class="lvl-hdr l1-col">L1</th>
+        <th class="lvl-hdr l2-col">L2</th>
+        <th class="lvl-hdr l3-col">L3</th>
+        <th class="lvl-hdr l4-col">L4</th>
+        <th class="lvl-hdr l5-col">L5</th>
+      </tr></thead>
+      <tbody>
+        <tr><td class="domain-col">&#129302; Foundation Models<span class="cn-sub">基础模型</span></td><td class="lvl-cell">Chat</td><td class="lvl-cell">Reasoning</td><td class="lvl-cell">Agents</td><td class="lvl-cell">Innovation</td><td class="lvl-cell">Organizer</td></tr>
+        <tr><td class="domain-col">&#129516; Humanoid Robots<span class="cn-sub">人形机器人</span></td><td class="lvl-cell">Basic assist</td><td class="lvl-cell">Perception</td><td class="lvl-cell">Conditional autonomy</td><td class="lvl-cell">High autonomy</td><td class="lvl-cell">Human-level</td></tr>
+        <tr><td class="domain-col">&#128663; Autonomous Driving<span class="cn-sub">自动驾驶</span></td><td class="lvl-cell">Driver assist</td><td class="lvl-cell">Partial</td><td class="lvl-cell">Conditional</td><td class="lvl-cell">High-level</td><td class="lvl-cell">Full</td></tr>
+        <tr><td class="domain-col">&#129504; Brain–Computer<span class="cn-sub">脑机接口</span></td><td class="lvl-cell">Signal decode</td><td class="lvl-cell">One-way control</td><td class="lvl-cell">Bidirectional</td><td class="lvl-cell">Clinical use</td><td class="lvl-cell">Symbiosis</td></tr>
+        <tr><td class="domain-col">&#128279; Web3<span class="cn-sub">Web3</span></td><td class="lvl-cell">Ledger</td><td class="lvl-cell">Smart contracts</td><td class="lvl-cell">DAO</td><td class="lvl-cell">Metaverse</td><td class="lvl-cell">Auto-state</td></tr>
+        <tr><td class="domain-col">&#9883; Longevity<span class="cn-sub">长寿</span></td><td class="lvl-cell">Lifestyle delay</td><td class="lvl-cell">Organ repair</td><td class="lvl-cell">Cell reset</td><td class="lvl-cell">Radical extension</td><td class="lvl-cell">Non-aging</td></tr>
+        <tr><td class="domain-col">&#9889; Energy<span class="cn-sub">能源</span></td><td class="lvl-cell">Fossil fuels</td><td class="lvl-cell">Solar</td><td class="lvl-cell">Fission</td><td class="lvl-cell">Fusion</td><td class="lvl-cell">Dyson sphere</td></tr>
+        <tr><td class="domain-col">&#128296; Materials<span class="cn-sub">材料</span></td><td class="lvl-cell">Metallurgy</td><td class="lvl-cell">Precision mfg</td><td class="lvl-cell">3D printing</td><td class="lvl-cell">Nanotech</td><td class="lvl-cell">Atomic synthesis</td></tr>
+        <tr><td class="domain-col">&#127918; Virtual Reality<span class="cn-sub">虚拟现实</span></td><td class="lvl-cell">Video games</td><td class="lvl-cell">Economic games</td><td class="lvl-cell">Open world</td><td class="lvl-cell">Self-operating</td><td class="lvl-cell">Metaverse</td></tr>
+        <tr><td class="domain-col">&#128640; Spatial Mobility<span class="cn-sub">空间移动</span></td><td class="lvl-cell">Automobile</td><td class="lvl-cell">Aircraft</td><td class="lvl-cell">Rocket</td><td class="lvl-cell">Spaceship</td><td class="lvl-cell">Warp drive</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<footer>
+  <p>Technology Levels L1–L5 &mdash; 技术等级</p>
+  <p style="margin-top:4px;opacity:.4;">&copy; 2026</p>
+  <p style="margin-top:.8rem;"><a href="https://github.com/gewenbo888/tech-levels" target="_blank" rel="noopener" style="color:#606880;font-size:.68rem;letter-spacing:.08em;text-decoration:none;border:1px solid var(--faint);padding:6px 16px;border-radius:100px;transition:all .3s;display:inline-block;" onmouseover="this.style.borderColor='rgba(139,92,246,.3)';this.style.color='var(--l3)'" onmouseout="this.style.borderColor='var(--faint)';this.style.color='#606880'">View on GitHub &rarr;</a></p>
+</footer>
+
+<script>
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis');});},{threshold:.05});
+document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+
+// Nav
+const tabs=document.querySelectorAll('.nav-tab');
+const secs=document.querySelectorAll('section[id]');
+const navObs=new IntersectionObserver(es=>{
+  es.forEach(e=>{
+    if(e.isIntersecting){
+      tabs.forEach(t=>t.classList.toggle('active',t.getAttribute('href')==='#'+e.target.id));
+    }
+  });
+},{threshold:.15,rootMargin:'-52px 0px -40% 0px'});
+secs.forEach(s=>navObs.observe(s));
+
+// Hero canvas — rising level bars
+(function(){
+  const c=document.getElementById('heroCanvas');
+  const ctx=c.getContext('2d');
+  let W,H;
+  function resize(){W=c.width=c.offsetWidth;H=c.height=c.offsetHeight;}
+  resize();window.addEventListener('resize',resize);
+  const colors=['#3b82f6','#6366f1','#8b5cf6','#a855f7','#c084fc'];
+  const bars=Array.from({length:40},(_,i)=>({
+    x:Math.random()*2000,
+    y:Math.random()*2000,
+    w:2+Math.random()*4,
+    h:20+Math.random()*80,
+    vy:-(0.1+Math.random()*0.3),
+    color:colors[Math.floor(Math.random()*5)],
+    alpha:.04+Math.random()*.06
+  }));
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    bars.forEach(b=>{
+      b.y+=b.vy;
+      if(b.y<-100){b.y=H+50;b.x=Math.random()*W;}
+      ctx.fillStyle=b.color;
+      ctx.globalAlpha=b.alpha;
+      ctx.fillRect(b.x,b.y,b.w,b.h);
+    });
+    ctx.globalAlpha=1;
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
+</body>
+</html>
